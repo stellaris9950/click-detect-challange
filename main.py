@@ -6,18 +6,36 @@ import random
 
 # Create walls,only run once
 class Circles:
-    def __init__(self, x, y, rad):
+    def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.rad = rad
 
 
 
-def drawCircles():
+
+circle_list = []
 
 
+def createDrawCircles():
+
+    times = random.randrange(5, 10)
+    for i in range(times):
+        x_of_c = random.randrange(10, 100)
+        y_of_c = random.randrange(10, 100)
+
+        circle_created = Circles(x_of_c, y_of_c)
+        circle_list.append(vars(circle_created))
+
+
+def drawCircles(circle_list):
+    for circle in circle_list:
+        pygame.draw.circle(screen, "green", circle['x_of_c'], circle['y_of_c'], 10)
+
+createDrawCircles()
+print(circle_list)
 
 # pygame setup
+
 pygame.init()
 screen = pygame.display.set_mode((720, 540))
 clock = pygame.time.Clock()
