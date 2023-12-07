@@ -29,7 +29,8 @@ def createDrawCircles():
 
 def drawCircles(circle_list):
     for circle in circle_list:
-        pygame.draw.circle(screen, "green", circle['x_of_c'], circle['y_of_c'], 10)
+        position = pygame.Vector2(circle['x'], circle['y'])
+        pygame.draw.circle(screen, "green", position, 20)
 
 createDrawCircles()
 print(circle_list)
@@ -50,12 +51,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-
-
-
-
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
+
+    # draw
+    drawCircles(circle_list)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
