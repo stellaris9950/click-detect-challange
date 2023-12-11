@@ -38,49 +38,39 @@ def createDrawCircles():
 
 createDrawCircles()
 
-def drawCircles(circle_list):
-    for circle in circle_list:
-        position = pygame.Vector2(circle['x'], circle['y'])
-        pygame.draw.circle(screen, "green", position, 20)
-
-def moveCircle(circle_list):
-
-    x_moving = 300 * dt
-    y_moving = 300 * dt
-
-    for circles in circle_list:
-        circles['x'] += x_moving
-        circles['y'] += y_moving
-
-
-def collisionDetection(screen_width, screen_height, circle_pos):
-    boarders = []
+def boarderCreate(screen_height, screen_width, boarder_list):
 
     boarder = vars(Wall(0, 0, 10, screen_height))
-    boarders.append(boarder)
+    boarder_list.append(boarder)
     boarder = vars(Wall(0, 0, screen_width, 10))
-    boarders.append(boarder)
+    boarder_list.append(boarder)
     boarder = vars(Wall(screen_width - 10, 0, 10, screen_height))
-    boarders.append(boarder)
+    boarder_list.append(boarder)
     boarder = vars(Wall(0, screen_height - 10, screen_width, 10))
-    boarders.append(boarder)
+    boarder_list.append(boarder)
+
+    for boarders in boarder_list:
+        pygame.draw.rect(screen, 'grey', [boarders['x'], boarders['y'], boarders['length'], boarders['width']])
 
 
+def collisionDetection(circle_pos, circle_movement, boarders):
     # collision detection
     for boarder in boarders:
 
-        if boarder['y'] - 30 <= circle_pos.y <= boarder['y'] - 30 + circle_movement and boarder['collision_x'] >= circle_pos.x >= \
-                boarder['x'] - 30:
-            circle_pos.y = boarder['y'] - 30
+        if boarder['y'] <= circle_pos.y <= boarder['y'] + circle_movement and boarder['collision_x'] >= circle_pos.x >= \
+                boarder['x']:
+            print("true")
         if boarder["collision_y"] - circle_movement <= circle_pos.y <= boarder['collision_y'] and boarder[
-            'collision_x'] >= circle_pos.x >= boarder['x'] - 30:
-            circle_pos.y = boarder['collision_y']
-        if boarder['x'] - 30 + circle_movement >= circle_pos.x >= boarder['x'] - 30 and boarder['collision_y'] >= circle_pos.y >= \
-                boarder['y'] - 30:
-            circle_pos.x = boarder['x'] - 30
+            'collision_x'] >= circle_pos.x >= boarder['x']:
+            print("true")
+        if boarder['x']+ circle_movement >= circle_pos.x >= boarder['x'] and boarder['collision_y'] >= circle_pos.y >= \
+                boarder['y']:
+            print("true")
         if boarder['collision_x'] >= circle_pos.x >= boarder['collision_x'] - circle_movement and boarder[
-            'collision_y'] >= circle_pos.y >= boarder['y'] - 30:
-            circle_pos.x = boarder['collision_x']
+            'collision_y'] >= circle_pos.y >= boarder['y']:
+            print("true")
+
+
 
 
 print(circle_list)
@@ -92,6 +82,11 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
+circle_movement = 300*dt
+boarders = []
+
+
+
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -102,9 +97,28 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
 
-    moveCircle(circle_list)
+    boarderCreate(540, 720, boarders)
+
+    # move circle
+
+    x_moving = 300 * dt
+    y_moving = 300 * dt
+    for circles in circle_list:
+        circles['x'] += x_moving
+        circles['y'] += y_moving
+
+
+
     # draw
-    drawCircles(circle_list)
+    for circle in circle_list:
+        position = pygame.Vector2(circle['x'], circle['y'])
+        pygame.draw.circle(screen, "green", position, 20)
+
+        collisionDetection(position, circle_movement, boarders)
+
+
+
+
 
 
 
