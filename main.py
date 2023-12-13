@@ -114,9 +114,23 @@ while running:
         position = pygame.Vector2(circle['x'], circle['y'])
         pygame.draw.circle(screen, "green", position, 20)
 
-        collisionDetection(position, circle_movement, boarders)
+        # collisionDetection(position, circle_movement, boarders)
 
+        circle_pos = pygame.Vector2(circle['x'], circle['y'])
+        for boarder in boarders:
 
+            if boarder['y'] <= circle_pos.y <= boarder['y'] + circle_movement and boarder['collision_x'] >= circle_pos.x >= \
+                    boarder['x']:
+                print("true")
+            if boarder["collision_y"] - circle_movement <= circle_pos.y <= boarder['collision_y'] and boarder[
+                'collision_x'] >= circle_pos.x >= boarder['x']:
+                print("true")
+            if boarder['x']+ circle_movement >= circle_pos.x >= boarder['x'] and boarder['collision_y'] >= circle_pos.y >= \
+                    boarder['y']:
+                print("true")
+            if boarder['collision_x'] >= circle_pos.x >= boarder['collision_x'] - circle_movement and boarder[
+                'collision_y'] >= circle_pos.y >= boarder['y']:
+                print("true")
 
 
 
