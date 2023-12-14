@@ -6,75 +6,58 @@ import random
 
 # Create walls,only run once
 class Circles:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+    def __init__(self, radius: int, pos: pygame.Vector2, move: pygame.Vector2):
+        self.radius = radius
+        self.pos = pos
+        self.move = move
 
-class Wall:
-    def __init__(self, x, y, length, width):
-        self.length = length
-        self.width = width
-        self.x = x
-        self.y = y
-        self.collision_x = x + length
-        self.collision_y = y + width
+    def moveCircle(self):
+        self.pos += self.move
+        if self.pos.x <= 0 or self.pos.x >= 720:
+            self.move.x *= -1
+
+        if self.pos.y <= 0 or self.pos.y >= 540:
+            self.move.y *= -1
+
+class Obstacles:
+    def __init__(self, size: pygame.Vector2, pos: pygame.Vector2, move: pygame.Vector2):
+        self.size = size
+        self.pos = pos
+        self.move = move
+
+    def moveObstacles(self):
+        self.pos += self.move
+        if self.pos.x <= 0 or self.pos.x >= 720:
+            self.move.x *= -1
+
+        if self.pos.y <= 0 or self.pos.y >= 540:
+            self.move.y *= -1
 
 
-
-circle_list = []
 # pygame setup
 
 
-
-def createDrawCircles():
+circle_list = []
+obstacles_list = []
+def createDraw():
 
     times = random.randrange(5, 10)
     for i in range(times):
-        x_of_c = random.randrange(10, 100)
-        y_of_c = random.randrange(10, 100)
+        circle_pos = pygame.Vector2(random.randrange(10, 700), random.randrange(10, 500))
+        circle_direction = pygame.Vector2(5, 5)
+        circle_created = Circles(20, circle_pos, circle_direction)
 
-        circle_created = Circles(x_of_c, y_of_c)
-        circle_list.append(vars(circle_created))
+        circle_list.append(circle_created)
 
-createDrawCircles()
+        square_size = pygame.Vector2(20, 20)
+        square_pos = pygame.Vector2(random.randrange(10, 700), random.randrange(10, 500))
+        square_direction = pygame.Vector2(5, 5)
+        square_created = Obstacles(square_size, square_pos, square_direction)
 
-def boarderCreate(screen_height, screen_width, boarder_list):
-
-    boarder = vars(Wall(0, 0, 10, screen_height))
-    boarder_list.append(boarder)
-    boarder = vars(Wall(0, 0, screen_width, 10))
-    boarder_list.append(boarder)
-    boarder = vars(Wall(screen_width - 10, 0, 10, screen_height))
-    boarder_list.append(boarder)
-    boarder = vars(Wall(0, screen_height - 10, screen_width, 10))
-    boarder_list.append(boarder)
-
-    for boarders in boarder_list:
-        pygame.draw.rect(screen, 'grey', [boarders['x'], boarders['y'], boarders['length'], boarders['width']])
+        obstacles_list.append(square_created)
 
 
-def collisionDetection(circle_pos, circle_movement, boarders):
-    # collision detection
-    for boarder in boarders:
-
-        if boarder['y'] <= circle_pos.y <= boarder['y'] + circle_movement and boarder['collision_x'] >= circle_pos.x >= \
-                boarder['x']:
-            print("true")
-        if boarder["collision_y"] - circle_movement <= circle_pos.y <= boarder['collision_y'] and boarder[
-            'collision_x'] >= circle_pos.x >= boarder['x']:
-            print("true")
-        if boarder['x']+ circle_movement >= circle_pos.x >= boarder['x'] and boarder['collision_y'] >= circle_pos.y >= \
-                boarder['y']:
-            print("true")
-        if boarder['collision_x'] >= circle_pos.x >= boarder['collision_x'] - circle_movement and boarder[
-            'collision_y'] >= circle_pos.y >= boarder['y']:
-            print("true")
-
-
-
-
-print(circle_list)
-
+createDraw()
 
 pygame.init()
 screen = pygame.display.set_mode((720, 540))
@@ -95,42 +78,31 @@ while running:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("white")
+    screen.fill("black")
 
-    boarderCreate(540, 720, boarders)
+
 
     # move circle
 
-    x_moving = 300 * dt
-    y_moving = 300 * dt
-    for circles in circle_list:
-        circles['x'] += x_moving
-        circles['y'] += y_moving
+    # x_moving = 300 * dt
+    # y_moving = 300 * dt
+    # for circles in circle_list:
+    #     circles['x'] += x_moving
+    #     circles['y'] += y_moving
 
 
 
     # draw
     for circle in circle_list:
-        position = pygame.Vector2(circle['x'], circle['y'])
-        pygame.draw.circle(screen, "green", position, 20)
-
+        pygame.draw.circle(screen, "green", circle.pos, circle.radius)
+        circle.moveCircle()
         # collisionDetection(position, circle_movement, boarders)
 
-        circle_pos = pygame.Vector2(circle['x'], circle['y'])
-        for boarder in boarders:
+    for obstacle in obstacles_list:
+        pygame.draw.rect(screen, "red", [obstacle.pos, obstacle.size])
+        obstacle.moveObstacles()
 
-            if boarder['y'] <= circle_pos.y <= boarder['y'] + circle_movement and boarder['collision_x'] >= circle_pos.x >= \
-                    boarder['x']:
-                print("true")
-            if boarder["collision_y"] - circle_movement <= circle_pos.y <= boarder['collision_y'] and boarder[
-                'collision_x'] >= circle_pos.x >= boarder['x']:
-                print("true")
-            if boarder['x']+ circle_movement >= circle_pos.x >= boarder['x'] and boarder['collision_y'] >= circle_pos.y >= \
-                    boarder['y']:
-                print("true")
-            if boarder['collision_x'] >= circle_pos.x >= boarder['collision_x'] - circle_movement and boarder[
-                'collision_y'] >= circle_pos.y >= boarder['y']:
-                print("true")
+
 
 
 
