@@ -20,17 +20,16 @@ class Circles:
             self.move.y *= -1
 
 class Obstacles:
-    def __init__(self, size: pygame.Vector2, pos: pygame.Vector2, move: pygame.Vector2):
-        self.size = size
-        self.pos = pos
+    def __init__(self, rect: pygame.Rect, move: pygame.Vector2):
+        self.rect = rect
         self.move = move
 
     def moveObstacles(self):
-        self.pos += self.move
-        if self.pos.x <= 0 or self.pos.x >= 720:
+        self.rect.topleft += self.move
+        if self.rect.left <= 0 or self.rect.left >= 720:
             self.move.x *= -1
 
-        if self.pos.y <= 0 or self.pos.y >= 540:
+        if self.rect.top <= 0 or self.rect.top >= 540:
             self.move.y *= -1
 
 
@@ -44,17 +43,36 @@ def createDraw():
     times = random.randrange(5, 10)
     for i in range(times):
         circle_pos = pygame.Vector2(random.randrange(10, 700), random.randrange(10, 500))
-        circle_direction = pygame.Vector2(5, 5)
+        circle_direction = pygame.Vector2(2, 2)
         circle_created = Circles(20, circle_pos, circle_direction)
 
         circle_list.append(circle_created)
 
-        square_size = pygame.Vector2(20, 20)
-        square_pos = pygame.Vector2(random.randrange(10, 700), random.randrange(10, 500))
+        # square_size = pygame.Vector2(20, 20)
+        # square_pos = pygame.Vector2(random.randrange(10, 700), random.randrange(10, 500))
+        rect_created = pygame.Rect(random.randrange(10, 700),
+                                   random.randrange(10, 500),
+                                   20, 20)
         square_direction = pygame.Vector2(5, 5)
-        square_created = Obstacles(square_size, square_pos, square_direction)
+        square_created = Obstacles(rect_created, square_direction)
+
+
 
         obstacles_list.append(square_created)
+
+
+def mouseDetect(obstacle_list, circle_list):
+    mouse_pos = pygame.mouse.get_pos()
+
+    for obstacle in obstacles_list:
+        if obstacle.rect.collidepoint(mouse_pos):
+            # return obstacle
+            print("obstacles")
+
+    for circle in circle_list:
+        if circle.pos.distance_to(mouse_pos) < circle.radius:
+            # return circle
+            print("circles")
 
 
 createDraw()
@@ -99,11 +117,11 @@ while running:
         # collisionDetection(position, circle_movement, boarders)
 
     for obstacle in obstacles_list:
-        pygame.draw.rect(screen, "red", [obstacle.pos, obstacle.size])
+        pygame.draw.rect(screen, "red", obstacle.rect)
         obstacle.moveObstacles()
 
 
-
+    mouseDetect(obstacles_list, circle_list)
 
 
 
