@@ -66,13 +66,12 @@ def mouseDetect(obstacle_list, circle_list):
 
     for obstacle in obstacles_list:
         if obstacle.rect.collidepoint(mouse_pos):
-            # return obstacle
-            print("obstacles")
+            return obstacle
 
     for circle in circle_list:
         if circle.pos.distance_to(mouse_pos) < circle.radius:
-            # return circle
-            print("circles")
+            return circle
+
 
 
 createDraw()
@@ -94,6 +93,10 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if type() == Obstacles
+            circle_list.remove(mouseDetect(obstacles_list, circle_list))
+            obstacles_list.remove(mouseDetect(obstacles_list, circle_list))
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
@@ -121,7 +124,7 @@ while running:
         obstacle.moveObstacles()
 
 
-    mouseDetect(obstacles_list, circle_list)
+
 
 
 
