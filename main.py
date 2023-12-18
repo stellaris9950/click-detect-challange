@@ -61,6 +61,8 @@ def createDraw():
         obstacles_list.append(square_created)
 
 
+
+
 def mouseDetect(obstacle_list, circle_list):
     mouse_pos = pygame.mouse.get_pos()
 
@@ -77,15 +79,19 @@ def mouseDetect(obstacle_list, circle_list):
 createDraw()
 
 pygame.init()
+
 screen = pygame.display.set_mode((720, 540))
 clock = pygame.time.Clock()
 running = True
 dt = 0
 
+FONT = pygame.freetype.Font("Arial.ttf", 100)
+
 circle_movement = 300*dt
 boarders = []
 
-
+lose = False
+win = False
 
 while running:
     # poll for events
@@ -94,9 +100,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            if type() == Obstacles
-            circle_list.remove(mouseDetect(obstacles_list, circle_list))
-            obstacles_list.remove(mouseDetect(obstacles_list, circle_list))
+            object_clicked = mouseDetect(obstacles_list, circle_list)
+            if type(object_clicked) == Obstacles:
+                obstacles_list.remove(object_clicked)
+                lose = True
+            elif type(object_clicked) == Circles:
+                circle_list.remove(object_clicked)
+
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
@@ -125,7 +135,13 @@ while running:
 
 
 
+    if lose:
+        screen.fill("red")
+        FONT.render_to(screen, (100, 150), "YOU LOSE", (50, 50, 50))
 
+    if not circle_list:
+        screen.fill("green")
+        FONT.render_to(screen, (100, 150), "YOU WIN", (50, 50, 50))
 
 
 
